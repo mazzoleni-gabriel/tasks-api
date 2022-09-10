@@ -20,3 +20,12 @@ func NewTaskFromEntity(entity tasks.Task) Task {
 		PerformedAt: entity.PerformedAt,
 	}
 }
+
+func (t Task) ToEntity() tasks.Task {
+	return tasks.Task{
+		ID:          t.ID,
+		Summary:     t.Summary,
+		CreatedBy:   t.CreatedBy,
+		PerformedAt: t.PerformedAt,
+	}
+}
