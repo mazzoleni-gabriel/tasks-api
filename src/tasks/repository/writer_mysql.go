@@ -20,3 +20,8 @@ func (w WriterMySQL) Create(ctx context.Context, entity tasks.Task) (uint, error
 	r := w.db.WithContext(ctx).Create(&model)
 	return model.ID, r.Error
 }
+
+func (w WriterMySQL) Delete(ctx context.Context, id uint) (int64, error) {
+	r := w.db.WithContext(ctx).Delete(&models.Task{}, id)
+	return r.RowsAffected, r.Error
+}
