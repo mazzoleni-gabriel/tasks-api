@@ -28,6 +28,19 @@ func RegisterHandler(r *chi.Mux, l Handler) {
 	r.Delete("/tasks/{task_id}", l.Handle)
 }
 
+// swagger:parameters delete-task
+type _ struct {
+	// in:path
+	// required: true
+	ID int `json:"task_id"`
+}
+
+// swagger:route DELETE /tasks/{task_id} Task delete-task
+//
+// responses:
+//   200:
+//   404: ErrorResponse
+//   500: ErrorResponse
 func (h Handler) Handle(w http.ResponseWriter, r *http.Request) {
 	strTaskID := chi.URLParam(r, "task_id")
 	taskID, err := strconv.ParseUint(strTaskID, 10, 64)

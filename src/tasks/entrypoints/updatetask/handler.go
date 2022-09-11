@@ -33,6 +33,22 @@ var mapErrors = map[apperror.ErrCode]int{
 	apperror.ErrOtherUserTask: http.StatusForbidden,
 }
 
+// swagger:parameters create-task
+type _ struct {
+	// in:body
+	// required: true
+	Body UpdateTaskRequest
+	// in:header
+	// required: true
+	UserID string `json:"X-User-ID"`
+}
+
+// swagger:route PUT /tasks Task update-task
+//
+// responses:
+//   200:
+//   404: ErrorResponse
+//   500: ErrorResponse
 func (h Handler) Handle(w http.ResponseWriter, r *http.Request) {
 	taskID, err := getTaskID(r)
 	if err != nil {

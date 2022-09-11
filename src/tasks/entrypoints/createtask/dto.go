@@ -12,12 +12,14 @@ import (
 
 const userHeader = "X-User-ID"
 
+// swagger:model CreateTaskRequest
 type CreateTaskRequest struct {
 	Summary     string    `json:"summary" validate:"required,max=2500"`
 	PerformedAt time.Time `json:"performed_at" validate:"required"`
 	CreatedBy   uint      `json:"-"`
 }
 
+// swagger:model CreateTaskResponse
 type CreateTaskResponse struct {
 	ID uint `json:"id"`
 }

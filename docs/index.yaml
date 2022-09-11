@@ -1,0 +1,173 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  CreateTaskRequest:
+    properties:
+      performed_at:
+        format: date-time
+        type: string
+        x-go-name: PerformedAt
+      summary:
+        type: string
+        x-go-name: Summary
+    type: object
+    x-go-package: tasks-api/src/tasks/entrypoints/createtask
+  CreateTaskResponse:
+    properties:
+      id:
+        format: uint64
+        type: integer
+        x-go-name: ID
+    type: object
+    x-go-package: tasks-api/src/tasks/entrypoints/createtask
+  ErrorResponse:
+    properties:
+      code:
+        type: string
+        x-go-name: Code
+      message:
+        type: string
+        x-go-name: Message
+    type: object
+    x-go-package: tasks-api/internal/render
+  SearchTasksResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/Task'
+        type: array
+        x-go-name: List
+    type: object
+    x-go-package: tasks-api/src/tasks/entrypoints/searchtasks
+  Task:
+    properties:
+      created_by:
+        format: uint64
+        type: integer
+        x-go-name: CreatedBy
+      id:
+        format: uint64
+        type: integer
+        x-go-name: ID
+      performed_at:
+        format: date-time
+        type: string
+        x-go-name: PerformedAt
+      summary:
+        type: string
+        x-go-name: Summary
+    type: object
+    x-go-package: tasks-api/src/tasks/entrypoints/searchtasks
+  UpdateTaskRequest:
+    properties:
+      performed_at:
+        format: date-time
+        type: string
+        x-go-name: PerformedAt
+      summary:
+        type: string
+        x-go-name: Summary
+    type: object
+    x-go-package: tasks-api/src/tasks/entrypoints/updatetask
+host: localhost:8080
+info:
+  description: Documentation of tasks-api.
+  title: tasks-api.
+  version: 0.0.0
+paths:
+  /tasks:
+    post:
+      operationId: create-task
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateTaskRequest'
+      - in: header
+        name: X-User-ID
+        required: true
+        type: string
+        x-go-name: UserID
+      responses:
+        "200":
+          description: CreateTaskResponse
+          schema:
+            $ref: '#/definitions/CreateTaskResponse'
+        "404":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - Task
+    put:
+      operationId: update-task
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - Task
+  /tasks/{task_id}:
+    delete:
+      operationId: delete-task
+      parameters:
+      - format: int64
+        in: path
+        name: task_id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - Task
+  /tasks/search:
+    get:
+      operationId: search-tasks
+      parameters:
+      - in: query
+        name: created_by
+        type: string
+        x-go-name: CreatedBy
+      responses:
+        "200":
+          description: SearchTasksResponse
+          schema:
+            $ref: '#/definitions/SearchTasksResponse'
+        "404":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: ErrorResponse
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+      - Task
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
