@@ -6,6 +6,7 @@ import (
 	deleteTaskEntrypoint "tasks-api/src/tasks/entrypoints/deletetask"
 	searchTasksEntrypoint "tasks-api/src/tasks/entrypoints/searchtasks"
 	updateTaskEntrypoint "tasks-api/src/tasks/entrypoints/updatetask"
+	"tasks-api/src/tasks/publisher"
 	"tasks-api/src/tasks/repository"
 	"tasks-api/src/tasks/usecases/createtask"
 	"tasks-api/src/tasks/usecases/deletetask"
@@ -17,6 +18,7 @@ var tasksFactories = fx.Provide(
 	// data and infrastructure
 	repository.NewWriterMySQL,
 	repository.NewReaderMySQL,
+	publisher.NewTaskFeedPublisher,
 
 	// business layer / use cases
 	createtask.NewUseCase,
@@ -33,15 +35,18 @@ var tasksFactories = fx.Provide(
 
 var tasksTranslations = fx.Provide(
 	func(u createtask.TaskCreator) createTaskEntrypoint.UseCase { return u },
+	func(p publisher.TaskFeedPublisher) createtask.Publisher { return p },
 	func(w repository.WriterMySQL) createtask.Writer { return w },
 
 	func(u searchtasks.TaskSearcher) searchTasksEntrypoint.UseCase { return u },
 	func(r repository.ReaderMySQL) searchtasks.Reader { return r },
 
 	func(u deletetask.TaskDeleter) deleteTaskEntrypoint.UseCase { return u },
+	func(p publisher.TaskFeedPublisher) deletetask.Publisher { return p },
 	func(w repository.WriterMySQL) deletetask.Writer { return w },
 
 	func(u updatetask.TaskUpdater) updateTaskEntrypoint.UseCase { return u },
+	func(p publisher.TaskFeedPublisher) updatetask.Publisher { return p },
 	func(w repository.WriterMySQL) updatetask.Writer { return w },
 	func(r repository.ReaderMySQL) updatetask.Reader { return r },
 )
