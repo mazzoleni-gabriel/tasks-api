@@ -157,7 +157,7 @@ func Test_Handle(t *testing.T) {
 	t.Run("Should return bad request when invalid payload", func(t *testing.T) {
 		payload := `invalid`
 
-		expectedResponse := `{"code":"bad_request", "message":"header X-User-ID is required"}`
+		expectedResponse := `{"code":"bad_request", "message":"invalid character 'i' looking for beginning of value"}`
 
 		w := runCase(nil, "/tasks/2", payload, strconv.Itoa(userID))
 
