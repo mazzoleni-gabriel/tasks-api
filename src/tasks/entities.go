@@ -11,4 +11,5 @@ type Task struct {
 
 type SearchFilters struct {
 	CreatedBy *uint
+	ID        *uint
 }

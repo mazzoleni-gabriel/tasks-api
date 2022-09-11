@@ -18,8 +18,12 @@ func NewReaderMySQL(db *gorm.DB) ReaderMySQL {
 func (r ReaderMySQL) Search(ctx context.Context, filters tasks.SearchFilters) (tasks []tasks.Task, err error) {
 	var tasksModel []models.Task
 	query := r.db.WithContext(ctx)
+
 	if filters.CreatedBy != nil {
 		query = query.Where("created_by = ?", filters.CreatedBy)
+	}
+	if filters.ID != nil {
+		query = query.Where("id = ?", filters.ID)
 	}
 	query = query.Find(&tasksModel)
 
