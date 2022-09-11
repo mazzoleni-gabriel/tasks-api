@@ -9,6 +9,7 @@ import (
 
 const createdByKey = "created_by"
 
+// swagger:model SearchTasksResponse
 type SearchTasksResponse struct {
 	List []Task `json:"list"`
 }

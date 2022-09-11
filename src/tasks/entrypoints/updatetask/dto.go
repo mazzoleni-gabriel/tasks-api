@@ -13,6 +13,7 @@ import (
 
 const userHeader = "X-User-ID"
 
+// swagger:model UpdateTaskRequest
 type UpdateTaskRequest struct {
 	Summary     string    `json:"summary" validate:"max=2500"`
 	PerformedAt time.Time `json:"performed_at"`

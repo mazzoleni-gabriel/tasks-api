@@ -27,6 +27,18 @@ func RegisterHandler(r *chi.Mux, l Handler) {
 	r.Get("/tasks/search", l.Handle)
 }
 
+// swagger:parameters search-tasks
+type _ struct {
+	// in:query
+	CreatedBy string `json:"created_by"`
+}
+
+// swagger:route GET /tasks/search Task search-tasks
+//
+// responses:
+//   200: SearchTasksResponse
+//   404: ErrorResponse
+//   500: ErrorResponse
 func (h Handler) Handle(w http.ResponseWriter, r *http.Request) {
 	filters, err := newFiltersFromRequest(r)
 	if err != nil {

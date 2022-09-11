@@ -28,6 +28,22 @@ func RegisterHandler(r *chi.Mux, l Handler) {
 	r.Post("/tasks", l.Handle)
 }
 
+// swagger:parameters create-task
+type _ struct {
+	// in:body
+	// required: true
+	Body CreateTaskRequest
+	// in:header
+	// required: true
+	UserID string `json:"X-User-ID"`
+}
+
+// swagger:route POST /tasks Task create-task
+//
+// responses:
+//   200: CreateTaskResponse
+//   404: ErrorResponse
+//   500: ErrorResponse
 func (h Handler) Handle(w http.ResponseWriter, r *http.Request) {
 	entity, err := newTaskFromRequest(r)
 	if err != nil {
