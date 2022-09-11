@@ -5,10 +5,12 @@ import (
 	createTaskEntrypoint "tasks-api/src/tasks/entrypoints/createtask"
 	deleteTaskEntrypoint "tasks-api/src/tasks/entrypoints/deletetask"
 	searchTasksEntrypoint "tasks-api/src/tasks/entrypoints/searchtasks"
+	updateTaskEntrypoint "tasks-api/src/tasks/entrypoints/updatetask"
 	"tasks-api/src/tasks/repository"
 	"tasks-api/src/tasks/usecases/createtask"
 	"tasks-api/src/tasks/usecases/deletetask"
 	"tasks-api/src/tasks/usecases/searchtasks"
+	"tasks-api/src/tasks/usecases/updatetask"
 )
 
 var tasksFactories = fx.Provide(
@@ -20,11 +22,13 @@ var tasksFactories = fx.Provide(
 	createtask.NewUseCase,
 	searchtasks.NewUseCase,
 	deletetask.NewUseCase,
+	updatetask.NewUseCase,
 
 	// present layer
 	createTaskEntrypoint.NewHandler,
 	searchTasksEntrypoint.NewHandler,
 	deleteTaskEntrypoint.NewHandler,
+	updateTaskEntrypoint.NewHandler,
 )
 
 var tasksTranslations = fx.Provide(
@@ -36,12 +40,17 @@ var tasksTranslations = fx.Provide(
 
 	func(u deletetask.TaskDeleter) deleteTaskEntrypoint.UseCase { return u },
 	func(w repository.WriterMySQL) deletetask.Writer { return w },
+
+	func(u updatetask.TaskUpdater) updateTaskEntrypoint.UseCase { return u },
+	func(w repository.WriterMySQL) updatetask.Writer { return w },
+	func(r repository.ReaderMySQL) updatetask.Reader { return r },
 )
 
 var tasksEndpoints = fx.Invoke(
 	createTaskEntrypoint.RegisterHandler,
 	searchTasksEntrypoint.RegisterHandler,
 	deleteTaskEntrypoint.RegisterHandler,
+	updateTaskEntrypoint.RegisterHandler,
 )
 
 var tasksModule = fx.Options(
