@@ -8,8 +8,9 @@ import (
 )
 
 type TaskUpdater struct {
-	writer Writer
-	reader Reader
+	writer    Writer
+	reader    Reader
+	publisher Publisher
 }
 
 //go:generate mockery --name=Writer --disable-version-string
@@ -22,10 +23,16 @@ type Reader interface {
 	Search(ctx context.Context, filters tasks.SearchFilters) (tasks []tasks.Task, err error)
 }
 
-func NewUseCase(writer Writer, reader Reader) TaskUpdater {
+//go:generate mockery --name=Publisher --disable-version-string
+type Publisher interface {
+	PublishUpdateMessage(ctx context.Context, task tasks.Task) error
+}
+
+func NewUseCase(writer Writer, reader Reader, publisher Publisher) TaskUpdater {
 	return TaskUpdater{
-		writer: writer,
-		reader: reader,
+		writer:    writer,
+		reader:    reader,
+		publisher: publisher,
 	}
 }
 
@@ -34,7 +41,17 @@ func (u TaskUpdater) Update(ctx context.Context, task tasks.Task, userID uint) (
 		return 0, err
 	}
 
-	return u.writer.Update(ctx, task)
+	affectedRows, err := u.writer.Update(ctx, task)
+	if err != nil {
+		return 0, err
+	}
+
+	err = u.publisher.PublishUpdateMessage(ctx, task)
+	if err != nil {
+		fmt.Printf("fail to publish update message for task %d, this use case should trigger an alert", task.ID)
+	}
+
+	return affectedRows, err
 }
 
 func (u TaskUpdater) validateTask(ctx context.Context, id uint, userID uint) error {
