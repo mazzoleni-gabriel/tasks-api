@@ -14,11 +14,15 @@ type Task struct {
 }
 
 func NewTaskFromEntity(entity tasks.Task) Task {
-	return Task{
+	task := Task{
 		Summary:     entity.Summary,
 		CreatedBy:   entity.CreatedBy,
 		PerformedAt: entity.PerformedAt,
 	}
+	if entity.ID != 0 {
+		task.ID = entity.ID
+	}
+	return task
 }
 
 func (t Task) ToEntity() tasks.Task {

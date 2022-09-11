@@ -21,6 +21,14 @@ func (w WriterMySQL) Create(ctx context.Context, entity tasks.Task) (uint, error
 	return model.ID, r.Error
 }
 
+func (w WriterMySQL) Update(ctx context.Context, entity tasks.Task) (int64, error) {
+	model := models.NewTaskFromEntity(entity)
+	r := w.db.WithContext(ctx).
+		Model(&model).
+		Updates(model)
+	return r.RowsAffected, r.Error
+}
+
 func (w WriterMySQL) Delete(ctx context.Context, id uint) (int64, error) {
 	r := w.db.WithContext(ctx).Delete(&models.Task{}, id)
 	return r.RowsAffected, r.Error
