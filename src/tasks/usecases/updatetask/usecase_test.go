@@ -37,11 +37,16 @@ func Test_UseCase(t *testing.T) {
 		writerMock.On("Update", mock.Anything, entity).
 			Return(int64(1), nil)
 
-		useCase := updatetask.NewUseCase(writerMock, readerMock)
+		publisherMock := mocks.NewPublisher(t)
+		publisherMock.On("PublishUpdateMessage", mock.Anything, entity).
+			Return(nil)
+
+		useCase := updatetask.NewUseCase(writerMock, readerMock, publisherMock)
 		_, err := useCase.Update(context.TODO(), entity, userID)
 
 		assert.NoError(t, err)
 		writerMock.AssertExpectations(t)
+		publisherMock.AssertExpectations(t)
 	})
 
 	t.Run("Should return error when update fails", func(t *testing.T) {
@@ -67,7 +72,7 @@ func Test_UseCase(t *testing.T) {
 		writerMock.On("Update", mock.Anything, entity).
 			Return(int64(0), assert.AnError)
 
-		useCase := updatetask.NewUseCase(writerMock, readerMock)
+		useCase := updatetask.NewUseCase(writerMock, readerMock, nil)
 		_, err := useCase.Update(context.TODO(), entity, userID)
 
 		assert.Error(t, err)
@@ -95,7 +100,7 @@ func Test_UseCase(t *testing.T) {
 
 		writerMock := mocks.NewWriter(t)
 
-		useCase := updatetask.NewUseCase(writerMock, readerMock)
+		useCase := updatetask.NewUseCase(writerMock, readerMock, nil)
 		_, err := useCase.Update(context.TODO(), entity, userID)
 
 		assert.Error(t, err)
@@ -120,7 +125,7 @@ func Test_UseCase(t *testing.T) {
 
 		writerMock := mocks.NewWriter(t)
 
-		useCase := updatetask.NewUseCase(writerMock, readerMock)
+		useCase := updatetask.NewUseCase(writerMock, readerMock, nil)
 		_, err := useCase.Update(context.TODO(), entity, userID)
 
 		assert.Error(t, err)
@@ -143,7 +148,7 @@ func Test_UseCase(t *testing.T) {
 
 		writerMock := mocks.NewWriter(t)
 
-		useCase := updatetask.NewUseCase(writerMock, readerMock)
+		useCase := updatetask.NewUseCase(writerMock, readerMock, nil)
 		_, err := useCase.Update(context.TODO(), entity, userID)
 
 		assert.Error(t, err)
