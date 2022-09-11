@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/render"
 	"net/http"
 	"strconv"
+	"tasks-api/internal/validator"
 	"tasks-api/src/tasks"
 	"time"
 )
@@ -12,8 +13,8 @@ import (
 const userHeader = "X-User-ID"
 
 type CreateTaskRequest struct {
-	Summary     string    `json:"summary"`
-	PerformedAt time.Time `json:"performed_at"`
+	Summary     string    `json:"summary" validate:"required,max=2500"`
+	PerformedAt time.Time `json:"performed_at" validate:"required"`
 	CreatedBy   uint      `json:"-"`
 }
 
@@ -22,7 +23,7 @@ type CreateTaskResponse struct {
 }
 
 func (dto *CreateTaskRequest) Bind(_ *http.Request) error {
-	return nil //@todo use validation lib to validate json fields
+	return validator.Validate(dto)
 }
 
 func (dto *CreateTaskRequest) toEntity() tasks.Task {
