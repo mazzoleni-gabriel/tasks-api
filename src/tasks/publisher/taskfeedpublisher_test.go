@@ -2,14 +2,17 @@ package publisher_test
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
 	"tasks-api/src/tasks"
 	"tasks-api/src/tasks/publisher"
 	"tasks-api/src/tasks/publisher/mocks"
-	"testing"
 )
 
+// @todo remove this comment
 func Test_PublishCreateMessage(t *testing.T) {
 	t.Run("Should return success", func(t *testing.T) {
 
