@@ -33,7 +33,7 @@ func Test_Handle(t *testing.T) {
 			CreatedBy:   uint(userID),
 		}
 
-		userCaseMock := &mocks.UseCase{}
+		userCaseMock := &mocks.UseCae{}
 		userCaseMock.On("Create", mock.Anything, expectedEntity).
 			Return(uint(1), nil)
 
