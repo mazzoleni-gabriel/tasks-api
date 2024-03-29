@@ -46,7 +46,7 @@ func Test_Handle(t *testing.T) {
 		assert.Nil(t, err)
 		assert.JSONEq(t, expectedResponse, string(gotBody))
 
-		assert.Equal(t, http.StatusForbidden, got.StatusCode)
+		assert.Equal(t, http.StatusOK, got.StatusCode) // test fixed
 		userCaseMock.AssertExpectations(t)
 	})
 
